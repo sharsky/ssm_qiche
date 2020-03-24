@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeqifu.bus.mapper.CustomerMapper">
+  <resultMap id="BaseResultMap" type="com.yeqifu.bus.domain.Customer">
+    <id column="id" jdbcType="INTEGER" property="identity" />
+    <result column="identity" jdbcType="VARCHAR" property="identity" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="isexamine" jdbcType="INTEGER" property="isexamine" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="drvimage" jdbcType="VARCHAR" property="drvimage" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="career" jdbcType="VARCHAR" property="career" />
+    <result column="vip" jdbcType="INTEGER" property="vip" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="breakfaith" jdbcType="INTEGER" property="breakfaith" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    identity, custname, isexamine, address, phone, career, createtime,vip,breakfaith
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bus_customer
+    where identity = #{identity,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from bus_customer
+    where identity = #{identity,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.yeqifu.bus.domain.Customer">
+    insert into bus_customer (identity, custname, isexamine,
+      address, phone, career, 
+      createtime)
+    values (#{identity,jdbcType=VARCHAR}, #{custname,jdbcType=VARCHAR}, #{isexamine,jdbcType=INTEGER},
+      #{address,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{career,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yeqifu.bus.domain.Customer">
+    insert into bus_customer
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="identity != null">
+        identity,
+      </if>
+      <if test="custname != null">
+        custname,
+      </if>
+      <if test="isexamine != null">
+        isexamine,
+      </if>
+      <if test="vip != null">
+        vip,
+      </if>
+      <if test="breakfaith != null">
+        breakfaith,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="career != null">
+        career,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="identity != null">
+        #{identity,jdbcType=VARCHAR},
+      </if>
+      <if test="custname != null">
+        #{custname,jdbcType=VARCHAR},
+      </if>
+      <if test="isexamine != null">
+        #{isexamine,jdbcType=INTEGER},
+      </if>
+      <if test="vip != null">
+        #{vip,jdbcType=INTEGER},
+      </if>
+      <if test="breakfaith != null">
+        #{breakfaith,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="career != null">
+        #{career,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yeqifu.bus.domain.Customer">
+    update bus_customer
+    <set>
+      <if test="custname != null">
+        custname = #{custname,jdbcType=VARCHAR},
+      </if>
+      <if test="isexamine != null">
+        isexamine = #{isexamine,jdbcType=INTEGER},
+      </if>
+      <if test="vip != null">
+        vip = #{vip,jdbcType=INTEGER},
+      </if>
+      <if test="breakfaith != null">
+        breakfaith = #{breakfaith,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="career != null">
+        career = #{career,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where identity = #{identity,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yeqifu.bus.domain.Customer">
+    update bus_customer
+    set custname = #{custname,jdbcType=VARCHAR},
+      isexamine = #{isexamine,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      career = #{career,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP}
+    where identity = #{identity,jdbcType=VARCHAR}
+  </update>
+
+  <select id="queryAllCustomer" resultMap="BaseResultMap">
+    SELECT
+    bc.id,
+    bc.drvimage,
+    bc.createtime,
+    bc.career,
+    bc.identity,
+    bc.isexamine,
+    c.address,
+    c.breakfaith,
+    c.`name`,
+    c.phone,
+    c.status,
+    c.vip
+    FROM
+    bus_customer bc
+    LEFT JOIN customer c ON bc.identity = c.identity
+    <where>
+      <if test="identity!=null and identity!=''">
+        and identity LIKE concat("%",#{identity},"%")
+      </if>
+      <if test="name!=null and name!=''">
+        and custname LIKE concat("%",#{custname},"%")
+      </if>
+      <if test="phone!=null and phone!=''">
+        and phone LIKE concat("%",#{phone},"%")
+      </if>
+      <if test="career!=null and career!=''">
+        and career LIKE concat("%",#{career},"%")
+      </if>
+      <if test="address!=null and address!=''">
+        and address LIKE concat("%",#{address},"%")
+      </if>
+      <if test="isexamine!=null">
+        and isexamine=#{isexamine}
+      </if>
+    </where>
+    order by createtime desc
+  </select>
+</mapper>
